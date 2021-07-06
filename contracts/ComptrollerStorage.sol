@@ -8,16 +8,19 @@ contract UnitrollerAdminStorage {
     /**
      * @notice Administrator for Fuse
      */
-    IFuseFeeDistributor internal constant fuseAdmin = IFuseFeeDistributor(0xa731585ab05fC9f83555cf9Bff8F58ee94e18F85);
+
+    /// @notice update this everytime you deploy fuse
+    IFuseFeeDistributor internal constant fuseAdmin =
+        IFuseFeeDistributor(0xd0EC100F1252a53322051a95CF05c32f0C174354);
 
     /**
-    * @notice Administrator for this contract
-    */
+     * @notice Administrator for this contract
+     */
     address public admin;
 
     /**
-    * @notice Pending administrator for this contract
-    */
+     * @notice Pending administrator for this contract
+     */
     address public pendingAdmin;
 
     /**
@@ -34,22 +37,23 @@ contract UnitrollerAdminStorage {
      * @notice Returns a boolean indicating if the sender has admin rights
      */
     function hasAdminRights() internal view returns (bool) {
-        return (msg.sender == admin && adminHasRights) || (msg.sender == address(fuseAdmin) && fuseAdminHasRights);
+        return
+            (msg.sender == admin && adminHasRights) ||
+            (msg.sender == address(fuseAdmin) && fuseAdminHasRights);
     }
 
     /**
-    * @notice Active brains of Unitroller
-    */
+     * @notice Active brains of Unitroller
+     */
     address public comptrollerImplementation;
 
     /**
-    * @notice Pending brains of Unitroller
-    */
+     * @notice Pending brains of Unitroller
+     */
     address public pendingComptrollerImplementation;
 }
 
 contract ComptrollerV1Storage is UnitrollerAdminStorage {
-
     /**
      * @notice Oracle which gives the price of any given asset
      */
@@ -58,23 +62,22 @@ contract ComptrollerV1Storage is UnitrollerAdminStorage {
     /**
      * @notice Multiplier used to calculate the maximum repayAmount when liquidating a borrow
      */
-    uint public closeFactorMantissa;
+    uint256 public closeFactorMantissa;
 
     /**
      * @notice Multiplier representing the discount on collateral that a liquidator receives
      */
-    uint public liquidationIncentiveMantissa;
+    uint256 public liquidationIncentiveMantissa;
 
     /**
      * @notice Max number of assets a single account can participate in (borrow or use as collateral)
      */
-    uint public maxAssets;
+    uint256 public maxAssets;
 
     /**
      * @notice Per-account mapping of "assets you are in", capped by maxAssets
      */
     mapping(address => CToken[]) public accountAssets;
-
 }
 
 contract ComptrollerV2Storage is ComptrollerV1Storage {
@@ -83,14 +86,12 @@ contract ComptrollerV2Storage is ComptrollerV1Storage {
          * @notice Whether or not this market is listed
          */
         bool isListed;
-
         /**
          * @notice Multiplier representing the most one can borrow against their collateral in this market.
          *  For instance, 0.9 to allow borrowing 90% of collateral value.
          *  Must be between 0 and 1, and stored as a mantissa.
          */
-        uint collateralFactorMantissa;
-
+        uint256 collateralFactorMantissa;
         /**
          * @notice Per-market mapping of "accounts in this asset"
          */
@@ -136,7 +137,6 @@ contract ComptrollerV2Storage is ComptrollerV1Storage {
 
     /// @notice Indexes of account addresses in the `whitelistArray` array
     mapping(address => uint256) internal whitelistIndexes;
-
 
     /**
      * @notice The Pause Guardian can pause certain actions as a safety mechanism.
